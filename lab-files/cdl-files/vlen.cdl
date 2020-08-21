@@ -1,0 +1,26 @@
+netcdf vlens_example {
+types:
+  compound obs_t {
+    float pressure ;
+    float temperature ;
+    float salinity ;
+  }; // obs_t
+  obs_t(*) some_obs_t ;
+  compound profile_t {
+    float latitude ;
+    float longitude ;
+    int time ;
+    some_obs_t obs ;
+  }; // profile_t
+  profile_t(*) some_profiles_t ;
+  compound track_t {
+    string id ;
+    string description ;
+    some_profiles_t profiles ;
+  }; // track_t
+dimensions:
+	tracks = 42 ;
+variables:
+	track_t cruise(tracks) ;
+data:
+}

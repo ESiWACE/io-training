@@ -1,0 +1,56 @@
+netcdf regions {
+
+group: USA {
+
+  dimensions:
+    time = UNLIMITED ; // (2 currently)
+  variables:
+    float average_temperature(time) ;
+  data:
+
+   average_temperature = 13.4167, 63.4167 ;
+
+  group: Colorado {
+
+    dimensions:
+      stations = 5 ;
+    variables:
+      float temperature(time, stations) ;
+    data:
+
+     temperature =
+       11, 12, 13, 14, 15,
+       61, 62, 63, 64, 65 ;
+
+    } // group Colorado
+
+  group: Wyoming {
+
+    dimensions:
+      stations = 4 ;
+    variables:
+      float temperature(time, stations) ;
+    data:
+
+     temperature =
+       12, 13, 14, 15,
+       62, 63, 64, 65 ;
+
+    } // group Wyoming
+
+  group: Alaska {
+
+    dimensions:
+      stations = 3 ;
+    variables:
+      float temperature(time, stations) ;
+    data:
+
+     temperature =
+       13, 14, 15,
+       63, 64, 65 ;
+
+    } // group Alaska
+  } // group USA
+
+}

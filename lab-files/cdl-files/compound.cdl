@@ -1,0 +1,20 @@
+netcdf nested_compound_example {
+types:
+  compound wind_vector_t {
+    float eastward ;
+    float northward ;
+    }
+  compound ob_t {
+      int station_id ;
+      double time ;
+      float temperature ;
+      float pressure ;
+      wind_vector_t wind ;
+  }
+dimensions:
+    stations = unlimited ;
+variables:
+    ob_t obs(stations) ;
+data:
+    obs = {42, 0.0, 20.5, 950.0, {2.5, 3.5}};
+}
