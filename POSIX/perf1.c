@@ -10,6 +10,8 @@
 
 // Compile with:
 // mpicc perf1.c -O3 -o perf1
+
+// This example writes all bytes with one IO call
 #define DATA_SIZE 4096
 
 int main(int argc, char ** argv){
@@ -23,7 +25,7 @@ int main(int argc, char ** argv){
   }
 
   // open the file, the time could be included in the measurement
-  int fd = open("testfile.bin", O_CREAT | O_TRUNC | O_WRONLY, S_IWUSR | S_IRUSR);
+  int fd = open("testfile1.bin", O_CREAT | O_TRUNC | O_WRONLY, S_IWUSR | S_IRUSR);
   if(fd == -1){
     printf("Error opening the file: %s\n", strerror(errno));
     exit(1);

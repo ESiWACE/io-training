@@ -22,10 +22,11 @@ int main(int argc, char ** argv){
   int data[DATA_SIZE];
   for(int i=0; i < DATA_SIZE; i++){
     data[i] = i;
+//    printf("%d", i);
   }
 
   // open the file, the time could be included in the measurement
-  int fd = open("testfile2.bin", O_CREAT | O_TRUNC | O_WRONLY, S_IWUSR | S_IRUSR);
+  int fd = open("testfile22.txt", O_CREAT | O_TRUNC | O_WRONLY, S_IWUSR | S_IRUSR);
   if(fd == -1){
     printf("Error opening the file: %s\n", strerror(errno));
     exit(1);
@@ -36,6 +37,8 @@ int main(int argc, char ** argv){
   // writing with POSIX is a bit cumbersome due to error checking
   for(size_t pos=0; pos < DATA_SIZE * sizeof(int); pos+= sizeof(int)){
     ssize_t ret = write(fd, ((char*) data) + pos, sizeof(int));
+//    printf("\nPos = %ld, Value = %s", pos, ((char*) data) + pos);
+    printf("\nPos = %ld", pos);
     if (ret != sizeof(int)){
       printf("Error in write: %s\n", strerror(errno));
       break;
@@ -43,7 +46,7 @@ int main(int argc, char ** argv){
   }
 
   double t_diff = MPI_Wtime() - t_start;
-  printf("Measured %es %.3f MiB/s\n", t_diff, DATA_SIZE/t_diff/1024/1024);
+  printf("\nMeasured %es %.3f MiB/s\n", t_diff, DATA_SIZE/t_diff/1024/1024);
   close(fd);
 
   MPI_Finalize();

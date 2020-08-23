@@ -1,4 +1,3 @@
-#include <mpi.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -7,15 +6,17 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 // Compile with:
 // mpicc perf1.c -O3 -o perf1
-// This example now writes every byte with one IO call
+// gcc perf1.c -O3 -o perf1
+
+// This example writes all bytes with one IO call
 
 #define DATA_SIZE 4096
 
 int main(int argc, char ** argv){
-  MPI_Init(& argc, & argv);
 
   // assume we do some compute...
 
@@ -25,27 +26,34 @@ int main(int argc, char ** argv){
   }
 
   // open the file, the time could be included in the measurement
-  int fd = open("testfile2.bin", O_CREAT | O_TRUNC | O_WRONLY, S_IWUSR | S_IRUSR);
-  if(fd == -1){
+  FILE *fd = fopen("testfile1111.txt", "w");
+  if(fd == NULL){
     printf("Error opening the file: %s\n", strerror(errno));
     exit(1);
   }
   // now start timer for IO
-  double t_start = MPI_Wtime();
+  clock_t t;
+  t = clock();
 
-  // writing with POSIX is a bit cumbersome due to error checking
-  for(size_t pos=0; pos < DATA_SIZE * sizeof(int); pos+= sizeof(int)){
-    ssize_t ret = write(fd, ((char*) data) + pos, sizeof(int));
-    if (ret != sizeof(int)){
+  // writing without parallel I/O
+  size_t count = DATA_SIZE * sizeof(int);
+  size_t pos = 0;
+  while(count > 0){
+    ssize_t ret = fwrite(((char*) data) + pos, 1, 1, fd);
+    if (ret > 0){
+      pos += ret;
+      count -= ret;
+    }else{
       printf("Error in write: %s\n", strerror(errno));
       break;
     }
   }
 
-  double t_diff = MPI_Wtime() - t_start;
-  printf("Measured %es %.3f MiB/s\n", t_diff, DATA_SIZE/t_diff/1024/1024);
-  close(fd);
+  t = clock() - t;
+  double t_diff = ((double)t)/CLOCKS_PER_SEC; // calculate the elapsed time
+  printf("\nMeasured %es %.3f MiB/s\n", t_diff, DATA_SIZE/t_diff/1024/1024);
 
-  MPI_Finalize();
+  fclose(fd);
+
   return 0;
 }
