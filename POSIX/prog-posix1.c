@@ -9,7 +9,9 @@
 #include <stdlib.h>
 
 // Compile with:
-// mpicc perf1.c -O3 -o perf1
+// mpicc prog-posix1.c -O3 -o prog-posix1
+// Run with:
+// mpirun prog-posix1
 
 // This example writes all bytes with one IO call
 #define DATA_SIZE 4096
